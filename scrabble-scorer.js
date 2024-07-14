@@ -39,7 +39,7 @@ function oldScrabbleScorer(word) {
 // don't change the names or your program won't work as expected. //
 
 let newPointStructure = transform(oldPointStructure);
-console.log (newPointStructure)
+
 let simpleScorer = function(word){
    word = word.toUpperCase();
    let letterpoints = word.length;
@@ -60,21 +60,31 @@ let vowelBonusScorer = function(word){
 return letterpoints
 };
 
-let scrabbleScorer;
+function scrabbleScorer(word) {
+   let letterArr = []
+   let wordPoints = 0;
+	word = word.toLowerCase();
+   letterArr = word.split('')
+   for (i = 0; i < letterArr.length; i++){
+      wordPoints += Number(newPointStructure[letterArr[i]])
+   }; 
+   return wordPoints;
+};
+
 
 const scoringAlgorithms = [
    {
-   name: 'Simple Score', 
+   name:'Simple Score', 
    description: 'Each letter is worth 1 point.',
    scorerFunction: function(x) {return simpleScorer(x);}
    }, {
    name: 'Bonus Vowels',
-   description: 'Vowels are worth 3 pts, Consonants are worth 1.',
-   scorerFunction: function(word) { return vowelBonusScorer(word)}
+   description: 'Vowels are 3 pts, Consonants are 1.',
+   scorerFunction: function(y) { return vowelBonusScorer(y)}
    },{
    name: 'Scrabble',
    description: 'The traditional scoring algorithm.',
-   scorerFunction: function(x) {return oldScrabbleScorer(x);}
+   scorerFunction: function(z) {return scrabbleScorer(z);}
    }
 ];
 
@@ -90,27 +100,22 @@ let algorithmSelect = input.question
    Enter 0, 1, or 2: `
 );
 if (algorithmSelect === '0') {
-   console.log (` The word ${UserWord} scores ${scoringAlgorithms[0].scorerFunction(UserWord)} points.`);
+   console.log (` The word '${UserWord}' scores ${scoringAlgorithms[0].scorerFunction(UserWord)} points.`);
 } else if (algorithmSelect === '1') {
-   console.log (`The word ${UserWord} scores ${scoringAlgorithms[1].scorerFunction(UserWord)} points.`);
+   console.log (`The word '${UserWord}' scores ${scoringAlgorithms[1].scorerFunction(UserWord)} points.`);
 } else if (algorithmSelect === '2') {
-   console.log (`The word ${UserWord} scores as follows:
-${scoringAlgorithms[2].scorerFunction(UserWord)}`);
+   console.log (`The word '${UserWord}' scores ${scoringAlgorithms[2].scorerFunction(UserWord)} points.`);
 } else {
    console.log ('Invalid Input, please try again.')
 };
 };
 
-function transform(obj) {
-   let newObj = {}
-for (let item in obj) {
-   let j = 0;
-   let target;
-   for (i = 0; i < item.length; i++) {
-      target = obj[j][i]
-      newObj[target] = obj[j];
+function transform(oldObj) {
+   let newObj = {};
+for (item in oldObj) {
+   for (i=0; i < oldObj[item].length; i++){
+      newObj[(oldObj[item][i].toLowerCase())] = Number(item)
    };
-   j++
 };
 return newObj;
 };
@@ -118,7 +123,7 @@ return newObj;
 function runProgram() {
    scorerPrompt();
    
-}
+};
 
 
 
@@ -139,3 +144,4 @@ module.exports = {
 	runProgram: runProgram,
 	scorerPrompt: scorerPrompt
 };
+
